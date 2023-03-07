@@ -1,10 +1,17 @@
+import { useEffect, useState } from "react";
+
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { Button,Card,Container,Grid,Image,Text } from "@nextui-org/react";
+
+import { cleanpokemon, colorTypeGradients, getPokemonInfo, hexToRGB, localFavorites } from "@/utils";
+
 import { pokeApi } from "@/api";
 import { Layout } from "@/components/layouts";
 import { Pokemon } from "@/interfaces";
-import { colorTypeGradients, hexToRGB, localFavorites } from "@/utils";
-import {Button,Card,Container,Grid,Image,Text} from "@nextui-org/react";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { useEffect, useState } from "react";
+
+import confetti from 'canvas-confetti';
+
+
 
 interface Props {
   pokemon: Pokemon;
@@ -20,7 +27,8 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
   // console.log(isFavorite);
 
   useEffect(() => {
-  setFavorite(localFavorites.existFavorites(id));
+    setFavorite(localFavorites.existFavorites(id));
+    console.log(favorite);
     
   }, [])
 
@@ -28,6 +36,19 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
   const onToggleFavorites = () => {
     setFavorite(!favorite);
     localFavorites.toggleFavorite(id);
+
+    if(favorite) return;
+
+    confetti({
+        zIndex:999,
+        particleCount:100,
+        spread:160,
+        angle:-100,
+        origin:{
+            x:1,
+            y:0
+        }
+    })
   }
   
   if (types.length === 2) {
@@ -77,7 +98,7 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
                     </Card.Header>
 
                     <Card.Image
-                      src={sprites.other?.dream_world.front_default ||"/no-image.png"}
+                      src={sprites.other?.home.front_default ||"/no-image.png"}
                       alt={name}
                       width="100%"
                       height={200}
@@ -157,7 +178,7 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
                             <Text
                               h5
                               transform="capitalize"
-                              css={{ color: "Red" }}
+                              css={{ color: "white" }}
                             >
                               {stat.stat.name}
                             </Text>
@@ -267,11 +288,9 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params as { id: string };
 
-  const { data } = await pokeApi.get<Pokemon>(`/pokemon/${id}`);
-
   return {
     props: {
-      pokemon: data,
+        pokemon: await getPokemonInfo(id),
     },
   };
 };
