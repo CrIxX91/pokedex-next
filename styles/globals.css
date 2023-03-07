@@ -11,6 +11,7 @@
     display: flex;
     flex-direction: row;
     gap: 1em;
+    margin-top: 2em;
 }
 .dimensions{
     padding-top: 1em;
@@ -127,4 +128,35 @@
 .water {
     background: #539DDF;
     box-shadow: 0 0 20px #539DDF;
+}
+
+.abilities{
+    display: flex;
+    gap: 2em;
+    /* background-color: white; */
+    /* max-width: 25%; */
+    padding: 0.5em;
+    border-radius: 1rem;
+    /* border-left: 6px solid #ccc!important;
+    border-color: #2196F3!important;
+    color: #000!important;
+    background-color: #ddffff!important; */
+    
+}
+.abilities p{
+    color: #000!important;
+}
+
+.info__container__data__abilities{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.info__container__stat__columns__name{
+    text-transform: uppercase;
+    color: #dc143c;
+}
+.info__container__stat__columns__val{
+    color: #000!important;
 }
